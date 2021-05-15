@@ -1,0 +1,8 @@
+a {
+    color: #64a19d;
+  }
+  
+  a:focus, a:hover {
+    text-decoration: none;
+    color: #3c6360;
+  }

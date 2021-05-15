@@ -1,47 +1,43 @@
 <section id="loginPage" class="loginSection" *ngIf="!register">
-  <div class="row">
-      <div class="col-md-4 offset-4 ">
-          <h1>Login</h1>
+    <div class="row">
+        <div class="col-md-4 offset-4 ">
+            <h1>Login</h1>
+            <form [formGroup]="loginForm" (ngSubmit)="login()" class="form">
+                <div class="form-group">
+                    <label>Contact Number<span class="text-danger">*</span></label>
+                    <input type="number" formControlName="contactNumber" id="contactNumber" class="form-control">
+                    <span class="error-message" *ngIf="loginForm.get('contactNumber').invalid && loginForm.get('contactNumber').touched" class="text-danger">Enter the valid registered number</span>
+                </div>
 
-          <form [formGroup]="loginForm" (ngSubmit)="login()" class="form">
-              <div class="form-group">
-                  <label>Contact Number<span class="text-danger">*</span></label>        
-                  <input type="number" formControlName="contactNumber" id="contactNumber" class="form-control"> 
-                  <span class="error-message" *ngIf="loginForm.get('contactNumber').invalid && loginForm.get('contactNumber').touched" class="text-danger">Enter the valid registered number</span>
-              </div>
+                <div class="form-group">
+                    <label>Password<span class="text-danger">*</span></label>
+                    <input type="password" formControlName="password" id="uPass" class="form-control">
+                    <span class="error-message" *ngIf="loginForm.get('password').invalid && loginForm.get('password').touched" class="text-danger">Enter a valid password</span>
+                    <br>
+                </div>
+                <span><span class="text-danger">*</span> marked fields are mandatory</span>
+                <br>
+                <div class="form-group">
+                    <div *ngIf="errorMessage!=null" class="text-danger">
+                        <h6>{{errorMessage}}</h6>
+                    </div>
+                </div>
 
-              <div class="form-group">
-                  <label>Password<span class="text-danger">*</span></label>        
-                  <input type="password" formControlName="password" id="uPass"class="form-control"> 
-                  <span class="error-message" *ngIf="loginForm.get('password').invalid && loginForm.get('password').touched" class="text-danger">Enter a valid password</span>
-                  <br>
-              </div>
-              <span><span class="text-danger">*</span> marked fields are mandatory</span>
-              <br>
-              <div class="form-group">
-                  <div *ngIf="errorMessage!=null" class="text-danger">
-                      <h6>{{errorMessage}}</h6>
-                  </div>
-              </div>
-
-              <button type="submit" [disabled]="loginForm.invalid" class="btn btn-primary">Login</button>   
-          </form>
-          <br>
-          <!--can be a button or a link based on need -->
-          <button class="btn btn-primary" (click)="getRegisterPage()">Click here to Register</button>
-      </div>
+                <button type="submit" [disabled]="loginForm.invalid" class="btn btn-primary">Login</button>
+            </form>
+            <br>
+            <button class="btn btn-primary" (click)="getRegisterPage()">Click here to Register</button>
+        </div>
     </div>
 </section>
 <section id="registerForm" class="registerSection" *ngIf="register">
-     <div class="row">
-         <div class="col-md-4 offset-4 ">
+    <div class="row">
+        <div class="col-md-4 offset-4 ">
             <h1>Register</h1>
-
-
-            <form [formGroup]="registerForm" (ngSubmit)="register()" class="form">
+            <form [formGroup]="registerForm" (ngSubmit)="registerUser()" class="form">
                 <div class="form-group">
-                    <label>User Name<span class="text-danger">*</span></label>        
-                    <input type="text" formControlName="userName" id="userName" class="form-control"> 
+                    <label>User Name<span class="text-danger">*</span></label>
+                    <input type="text" formControlName="userName" id="userName" class="form-control">
                     <span class="error-message" *ngIf="registerForm.get('userName').invalid && registerForm.get('userName').touched" class="text-danger">Don't Leave it Blank</span>
                 </div>
 
@@ -51,38 +47,37 @@
                     <span class="error-message" *ngIf="registerForm.get('email').invalid && registerForm.get('email').touched" class="text-danger">Fill the correct email address</span>
                 </div>
 
-               <div class="form-group">
+                <div class="form-group">
                     <label>Contact Number<span class="text-danger">*</span></label>
                     <input type="number" formControlName="contactNumber" id="contactNumber" class="form-control" />
                     <span class="error-message" *ngIf="registerForm.get('contactNumber').invalid && registerForm.get('contactNumber').touched" class="text-danger">Don't Leave it Blank</span>
                 </div>
 
-               <div class="form-group">
-                    <label>Password<span class="text-danger">*</span></label>        
-                    <input type="password" formControlName="password" id="uPass"class="form-control"> 
+                <div class="form-group">
+                    <label>Password<span class="text-danger">*</span></label>
+                    <input type="password" formControlName="password" id="uPass" class="form-control">
                     <span class="error-message" *ngIf="registerForm.get('password').invalid && registerForm.get('password').touched" class="text-danger">Password Too Weak. Select a strong Password.</span>
                 </div>
 
-                 <div class="form-group">
-                    <label>Confirm Password<span class="text-danger">*</span></label>        
-                    <input type="password" formControlName="confirmPassword" id="confirmPassword"class="form-control"> 
+                <div class="form-group">
+                    <label>Confirm Password<span class="text-danger">*</span></label>
+                    <input type="password" formControlName="confirmPassword" id="confirmPassword" class="form-control">
                     <span class="error-message" *ngIf="registerForm.get('confirmPassword').hasError('mustMatch') && registerForm.get('confirmPassword').touched " class="text-danger">Password and Confirm Password does not match</span>
                     <br>
                 </div>
                 <span><span class="text-danger">*</span> marked fields are mandatory</span>
-              <br>
-              <div class="form-group">
-                  <div *ngIf="errorMessage!=null" class="text-danger">
-                      <h6>{{errorMessage}}</h6>
-                  </div>
-              </div>
-              <button type="submit" [disabled]="registerForm.invalid" class="btn btn-primary">Register</button>
+                <br>
+                <div class="form-group">
+                    <div *ngIf="errorMessage!=null" class="text-danger">
+                        <h6>{{errorMessage}}</h6>
+                    </div>
+                </div>
+                <button type="submit" [disabled]="registerForm.invalid" class="btn btn-primary">Register</button>
             </form>
-             <br>
-            <a (click)="getLoginPage()" > Already Have an account??? 
-                 Login To Continue </a><br>
-                 <br>
-                 <!-- style="color: cadetblue;cursor: pointer;" -->
-         </div>
-     </div>   
+            <br>
+            <a (click)="getLoginPage()"> Already Have an account?  Click Here To Login</a>
+            <br>
+            <br>
+        </div>
+    </div>
 </section>

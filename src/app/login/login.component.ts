@@ -11,75 +11,71 @@ import { Users } from '../models/User';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  registerPage:Boolean = false;
-  register:Boolean = false;
+  register: Boolean = false;
+  loginForm: FormGroup;
+  registerForm: FormGroup;
+  errorMessage: string;
+  user: Users = new Users();
 
-  loginForm:FormGroup;
-  registerForm:FormGroup;
-  errorMessage : string;
-  user:Users=new Users();
-  constructor(private fb: FormBuilder, private router: Router,private auth:AuthService,private loginservice:LoginService) { }
+  constructor(private fb: FormBuilder, private router: Router, private auth: AuthService, private loginservice: LoginService) { }
 
   ngOnInit() {
 
     this.loginForm = this.fb.group({
-      contactNumber: ['', [ Validators.required,Validators.pattern('^[0-9]{10}$')]],
-      password: ['', [Validators.required,Validators.minLength(7),Validators.maxLength(20)]]
-      })
+      contactNumber: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
+      password: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(20)]]
+    })
 
     this.registerForm = this.fb.group({
-      contactNumber: ['', [ Validators.required,Validators.pattern('^[0-9]{10}$')]],
-      password: ['', [Validators.required,Validators.minLength(7),Validators.maxLength(20)]],
-      userName: ['',[Validators.required,Validators.minLength(7),Validators.maxLength(20)]],
-      email: ['',[ Validators.required,Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
+      contactNumber: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
+      password: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(20)]],
+      userName: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$')]],
       confirmPassword: ['', [Validators.required]]
 
-    },{validator: this.checkPassword('password', 'confirmPassword')})
+    }, { validator: this.checkPassword('password', 'confirmPassword') })
   }
-  get f() { return this.registerForm.controls; }
+  
   login() {
-    this.registerPage=false;
     this.loginservice.login(this.loginForm.value).subscribe(
       (response) => {
-          this.errorMessage = null;
-          this.user = response;
-          this.auth.nextUser(this.user);
-          this.router.navigate(['/home'])
+        this.errorMessage = null;
+        this.user = response;
+        this.auth.nextUser(this.user);
+        this.router.navigate(['/home'])
 
       },
       (errorResponse) => {
         //error message if invalid contact number or password
-          this.errorMessage = errorResponse.error.message;
-          sessionStorage.clear();
+        this.errorMessage = errorResponse.error.message;
+        sessionStorage.clear();
       }
     );
-}
-  getRegisterPage(){
-    this.registerPage=true;
-    this.register=true;
+  }
+  getRegisterPage() {
+    this.register = true;
     //open register page if the user is not registered already
-    //this.router.navigate(['/', 'register']);
   }
-  getLoginPage()
-  {
-    this.register=false;
+  getLoginPage() {
+    this.register = false;
   }
+
+  registerUser() { }
+
   checkPassword(controlName: string, matchingControlName: string) {
     return (formGroup: FormGroup) => {
-        const control = formGroup.controls[controlName];
-        const matchingControl = formGroup.controls[matchingControlName];
-        if (matchingControl.errors && !matchingControl.errors.mustMatch) {
-            // return if another validator has already found an error on the matchingControl
-            return;
-        }
-        // set error on matchingControl if validation fails
-        if (control.value !== matchingControl.value) {
-            matchingControl.setErrors({ mustMatch: true });
-            
-        } else {
-            matchingControl.setErrors(null);
-        
-        }
+      const control = formGroup.controls[controlName];
+      const matchingControl = formGroup.controls[matchingControlName];
+      if (matchingControl.errors && !matchingControl.errors.mustMatch) {
+        // return if another validator has already found an error on the matchingControl
+        return;
+      }
+      // set error on matchingControl if validation fails
+      if (control.value !== matchingControl.value) {
+        matchingControl.setErrors({ mustMatch: true });
+      } else {
+        matchingControl.setErrors(null);
+      }
     }
   }
 
